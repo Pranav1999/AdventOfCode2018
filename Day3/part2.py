@@ -1,0 +1,64 @@
+import re
+import numpy as np
+
+np.set_printoptions(threshold=np.nan)
+
+file = open("input.txt", "r")
+claims = file.readlines()
+
+left_edge = 0
+top_edge = 0
+rows = 0
+columns = 0
+
+fabric = np.zeros((1000, 1000), dtype=int)
+
+for claim in claims:
+    edges_regex = re.compile(r'\d+,\d+')
+    edge_match = edges_regex.search(claim)
+    edge_match = edge_match.group().split(',')
+    left_edge = edge_match[0]
+    top_edge = edge_match[1]
+    size_regex = re.compile(r'\d+x\d+')
+    size_match = size_regex.search(claim)
+    size_match = size_match.group().split('x')
+    rows = size_match[0]
+    columns = size_match[1]
+    left_edge = int(left_edge)
+    top_edge = int(top_edge)
+    rows = int(rows)
+    columns = int(columns)
+
+    for i in range((left_edge - 1), (left_edge + rows - 1)):
+        for j in range((top_edge - 1), (top_edge + columns - 1)):
+            fabric[i][j] += 1
+
+new_count = 0
+prev_count = 0
+for claim in claims:
+
+    prev_count = new_count
+    new_count = 0
+
+    if prev_count == 0:
+        print(claim)
+
+    edges_regex = re.compile(r'\d+,\d+')
+    edge_match = edges_regex.search(claim)
+    edge_match = edge_match.group().split(',')
+    left_edge = edge_match[0]
+    top_edge = edge_match[1]
+    size_regex = re.compile(r'\d+x\d+')
+    size_match = size_regex.search(claim)
+    size_match = size_match.group().split('x')
+    rows = size_match[0]
+    columns = size_match[1]
+    left_edge = int(left_edge)
+    top_edge = int(top_edge)
+    rows = int(rows)
+    columns = int(columns)
+
+    for i in range((left_edge - 1), (left_edge + rows - 1)):
+        for j in range((top_edge - 1), (top_edge + columns - 1)):
+            if fabric[i][j] > 1:
+                new_count += 1
